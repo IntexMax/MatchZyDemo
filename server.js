@@ -1,27 +1,25 @@
-// server.js
-
-import express from 'express'; // Importă Express
-import multer from 'multer';   // Importă Multer
-import path from 'path';       // Importă Path (pentru gestionarea căilor de fișiere)
+import express from 'express';
+import multer from 'multer';
+import path from 'path';
 
 // Creează aplicația Express
 const app = express();
 
-// Configurare Multer pentru a salva fișierele încărcate
+// Configurează Multer pentru upload
 const upload = multer({
-  dest: 'uploads/', // Folderul în care fișierele vor fi stocate temporar
+  dest: 'uploads/', // Folderul unde fișierele vor fi stocate
 });
 
-// Rute de încărcare
-app.post('/upload', upload.single('demo'), (req, res) => {
-  // Printează fișierul încărcat în consolă
-  console.log(req.file);
+// Servește fișiere statice (de exemplu, index.html)
+app.use(express.static(path.join(__dirname, 'public')));
 
-  // Răspunde cu un mesaj de succes
+// Ruta pentru upload
+app.post('/upload', upload.single('demo'), (req, res) => {
+  console.log(req.file); // Afișează fișierul în consolă
   res.send('File uploaded successfully!');
 });
 
-// Setează portul pe care va asculta serverul
+// Setează portul
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
