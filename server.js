@@ -1,9 +1,14 @@
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Creează aplicația Express
 const app = express();
+
+// Rezolvă calea directorului curent
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Configurează Multer pentru upload
 const upload = multer({
