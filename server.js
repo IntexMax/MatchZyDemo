@@ -2,23 +2,15 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Emulează __dirname pentru ESM
+const app = express();
+const port = process.env.PORT || 10000;
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Inițializare aplicație
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Servește fișiere statice dintr-un director public (dacă ai front-end)
+// Servește fișierele din folderul public
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta de bază
-app.get('/', (req, res) => {
-  res.send('Serverul funcționează perfect pe Render! 🚀');
-});
-
-// Pornire server
-app.listen(PORT, () => {
-  console.log(`✅ Serverul rulează pe http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`✅ Serverul rulează pe http://localhost:${port}`);
 });
