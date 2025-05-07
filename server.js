@@ -1,40 +1,28 @@
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+// server.js
 
+import express from 'express'; // Importă Express
+import multer from 'multer';   // Importă Multer
+import path from 'path';       // Importă Path (pentru gestionarea căilor de fișiere)
+
+// Creează aplicația Express
 const app = express();
-const port = 3000;
 
-// Crearea directorului uploads dacă nu există
-if (!fs.existsSync('uploads')) {
-  fs.mkdirSync('uploads');
-}
-
-// Configurarea stocării fișierelor
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Directorul unde vor fi stocate fișierele
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Numele fișierului cu timestamp
-  }
+// Configurare Multer pentru a salva fișierele încărcate
+const upload = multer({
+  dest: 'uploads/', // Folderul în care fișierele vor fi stocate temporar
 });
 
-// Inițializarea multer cu configurația de mai sus
-const upload = multer({ storage: storage });
+// Rute de încărcare
+app.post('/upload', upload.single('demo'), (req, res) => {
+  // Printează fișierul încărcat în consolă
+  console.log(req.file);
 
-// Route pentru încărcarea unui singur fișier
-app.post('/upload', upload.single('file'), (req, res) => {
-  try {
-    res.send({ message: 'Fișierul a fost încărcat cu succes!', file: req.file });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ message: 'Eroare la încărcarea fișierului.' });
-  }
+  // Răspunde cu un mesaj de succes
+  res.send('File uploaded successfully!');
 });
 
-// Pornirea serverului
-app.listen(port, () => {
-  console.log(`Serverul rulează pe http://localhost:${port}`);
+// Setează portul pe care va asculta serverul
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
